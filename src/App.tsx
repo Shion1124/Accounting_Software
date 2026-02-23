@@ -21,14 +21,14 @@ export default function App() {
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'dashboard': return <Dashboard />;
+      case 'dashboard': return <Dashboard onNavigate={setCurrentPage} />;
       case 'journal-entry': return <JournalEntry />;
       case 'journal-list': return <JournalList />;
       case 'master-accounts': return <MasterAccounts />;
       case 'financial-statements': return <FinancialStatements />;
       case 'fixed-assets': return <FixedAssets />;
       case 'settings': return <Settings />;
-      default: return <Dashboard />;
+      default: return <Dashboard onNavigate={setCurrentPage} />;
     }
   };
 

@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
-export const Dashboard = () => {
+export const Dashboard = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
   const stats = useLiveQuery(async () => {
     const lines = await db.journalLines.toArray();
     const accounts = await db.accounts.toArray();
@@ -107,7 +107,10 @@ export const Dashboard = () => {
           <p className="text-slate-400 text-sm mb-8 leading-relaxed">
             すべての仕訳を入力したら、「決算・帳票」タブからPDFを出力して税理士へ送信しましょう。1人会社向けのシンプルなフローを提供します。
           </p>
-          <button className="bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all transform active:scale-95">
+          <button
+            onClick={() => onNavigate('financial-statements')}
+            className="bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all transform active:scale-95"
+          >
             帳票を確認する
           </button>
         </div>
@@ -115,3 +118,4 @@ export const Dashboard = () => {
     </div>
   );
 };
+
