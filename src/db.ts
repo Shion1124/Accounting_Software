@@ -28,6 +28,7 @@ export interface JournalLine {
 export interface FixedAsset {
   id?: string;
   name: string;
+  accountId: string;
   acquisitionDate: string;
   acquisitionCost: number;
   usefulLife: number;
@@ -71,7 +72,8 @@ export const initialAccounts: Omit<Account, 'id'>[] = [
   { code: '100', name: '現金', type: 'asset', isActive: true },
   { code: '101', name: '普通預金', type: 'asset', isActive: true },
   { code: '110', name: '売掛金', type: 'asset', isActive: true },
-  { code: '150', name: '備品', type: 'asset', isActive: true },
+  { code: '150', name: '工具器具備品', type: 'asset', isActive: true },
+  { code: '190', name: '創立費', type: 'asset', isActive: true },
 
   // Liabilities
   { code: '200', name: '買掛金', type: 'liability', isActive: true },
@@ -119,6 +121,8 @@ export async function seedDatabase() {
       { key: 'taxMethod', value: '税込方式' },
       { key: 'taxRate', value: '10' },
       { key: 'reducedTaxRate', value: '8' },
+      { key: 'beginningCapital', value: '0' },
+      { key: 'beginningRetainedEarnings', value: '0' },
       { key: 'issuedShares', value: '100' },
       { key: 'otherNotes', value: '特記事項なし' }
     ]);

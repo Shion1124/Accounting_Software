@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Download, Upload, AlertTriangle, Building, User, MapPin, Hash, ClipboardList, Info } from 'lucide-react';
+import { Download, Upload, Building, User, MapPin, Hash, ClipboardList, Info, Calculator } from 'lucide-react';
 
 export const Settings = () => {
   const [isExporting, setIsExporting] = useState(false);
@@ -113,7 +113,7 @@ export const Settings = () => {
                 placeholder="例：代表取締役 常田 詩音"
               />
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-5 gap-2">
               <div className="col-span-1">
                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex items-center gap-1"><Hash size={12} /> 期数</label>
                 <input
@@ -133,11 +133,20 @@ export const Settings = () => {
                   onChange={e => handleUpdate('fiscalYearStart', e.target.value)}
                 />
               </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">年度終了日</label>
+                <input
+                  type="date"
+                  className="w-full border p-2 rounded bg-white"
+                  value={form.fiscalYearEnd || ''}
+                  onChange={e => handleUpdate('fiscalYearEnd', e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Notes Config */}
+        {/* Note Config */}
         <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
           <h3 className="font-bold mb-6 flex items-center gap-2 text-slate-700"><ClipboardList size={20} /> 個別注記表の設定</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
@@ -188,6 +197,31 @@ export const Settings = () => {
                 value={form.otherNotes || ''}
                 onChange={e => handleUpdate('otherNotes', e.target.value)}
                 placeholder="特記事項なし"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Beginning Balance Config */}
+        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
+          <h3 className="font-bold mb-6 flex items-center gap-2 text-emerald-600"><Calculator size={20} /> 株主資本等の期首残高（変動計算書の開始残高）</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">資本金 期首残高</label>
+              <input
+                type="number"
+                className="w-full border p-2 rounded bg-white text-right font-mono"
+                value={form.beginningCapital || '0'}
+                onChange={e => handleUpdate('beginningCapital', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">利益剰余金 期首残高</label>
+              <input
+                type="number"
+                className="w-full border p-2 rounded bg-white text-right font-mono"
+                value={form.beginningRetainedEarnings || '0'}
+                onChange={e => handleUpdate('beginningRetainedEarnings', e.target.value)}
               />
             </div>
           </div>
