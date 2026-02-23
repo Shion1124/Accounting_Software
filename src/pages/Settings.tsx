@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Download, Upload, AlertTriangle, Calendar, Building } from 'lucide-react';
+import { Download, Upload, AlertTriangle, Building, User, MapPin, Hash, ClipboardList, Info } from 'lucide-react';
 
 export const Settings = () => {
   const [isExporting, setIsExporting] = useState(false);
+  const settingsData = useLiveQuery(() => db.settings.toArray());
+  const [form, setForm] = useState<Record<string, any>>({});
+
+  useEffect(() => {
+    if (settingsData) {
+      const s = settingsData.reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
+      setForm(s);
+    }
+  }, [settingsData]);
+
+  const handleUpdate = async (key: string, value: any) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+    await db.settings.put({ key, value });
+  };
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -61,48 +76,145 @@ export const Settings = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-4xl mx-auto pb-20">
       <h2 className="text-2xl font-bold mb-8">設定・管理</h2>
 
-      <div className="space-y-6">
-        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="font-bold mb-4 flex items-center gap-2"><Building size={20} className="text-gray-400" /> 基本情報</h3>
-          <div className="grid gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Company Info */}
+        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
+          <h3 className="font-bold mb-6 flex items-center gap-2"><Building size={20} className="text-blue-500" /> 基本情報（決算書類に反映されます）</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase mb-1">会社名</label>
-              <input type="text" className="w-full border p-2 rounded" defaultValue="サンプル株式会社" />
+              <input
+                type="text"
+                className="w-full border p-2 rounded bg-white"
+                value={form.companyName || ''}
+                onChange={e => handleUpdate('companyName', e.target.value)}
+              />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">年度開始日</label>
-              <input type="date" className="w-full border p-2 rounded" defaultValue="2025-01-01" />
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex items-center gap-1"><MapPin size={12} /> 住所</label>
+              <input
+                type="text"
+                className="w-full border p-2 rounded bg-white"
+                value={form.address || ''}
+                onChange={e => handleUpdate('address', e.target.value)}
+                placeholder="例：東京都港区..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex items-center gap-1"><User size={12} /> 代表者氏名</label>
+              <input
+                type="text"
+                className="w-full border p-2 rounded bg-white"
+                value={form.representativeName || ''}
+                onChange={e => handleUpdate('representativeName', e.target.value)}
+                placeholder="例：代表取締役 常田 詩音"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-1">
+                <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex items-center gap-1"><Hash size={12} /> 期数</label>
+                <input
+                  type="number"
+                  className="w-full border p-2 rounded bg-white"
+                  value={form.fiscalPeriod || ''}
+                  onChange={e => handleUpdate('fiscalPeriod', e.target.value)}
+                  placeholder="2"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">年度開始日</label>
+                <input
+                  type="date"
+                  className="w-full border p-2 rounded bg-white"
+                  value={form.fiscalYearStart || ''}
+                  onChange={e => handleUpdate('fiscalYearStart', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Notes Config */}
+        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
+          <h3 className="font-bold mb-6 flex items-center gap-2 text-slate-700"><ClipboardList size={20} /> 個別注記表の設定</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">消費税等の会計処理</label>
+              <input
+                type="text"
+                className="w-full border p-2 rounded bg-white"
+                value={form.taxMethod || ''}
+                onChange={e => handleUpdate('taxMethod', e.target.value)}
+                placeholder="例：税込方式"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">標準税率 (%)</label>
+              <input
+                type="number"
+                className="w-full border p-2 rounded bg-white"
+                value={form.taxRate || ''}
+                onChange={e => handleUpdate('taxRate', e.target.value)}
+                placeholder="10"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">軽減税率 (%)</label>
+              <input
+                type="number"
+                className="w-full border p-2 rounded bg-white"
+                value={form.reducedTaxRate || ''}
+                onChange={e => handleUpdate('reducedTaxRate', e.target.value)}
+                placeholder="8"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">発行済株式総数</label>
+              <input
+                type="text"
+                className="w-full border p-2 rounded bg-white"
+                value={form.issuedShares || ''}
+                onChange={e => handleUpdate('issuedShares', e.target.value)}
+                placeholder="例：普通株式 100株"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">その他の注記</label>
+              <textarea
+                className="w-full border p-2 rounded bg-white h-24"
+                value={form.otherNotes || ''}
+                onChange={e => handleUpdate('otherNotes', e.target.value)}
+                placeholder="特記事項なし"
+              />
             </div>
           </div>
         </section>
 
         <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="font-bold mb-4 flex items-center gap-2 text-blue-600"><Download size={20} /> バックアップと復元</h3>
-          <p className="text-sm text-gray-500 mb-6">すべてのデータをJSON形式で保存します。万一のデータ消失に備え、定期的なバックアップを推奨します。</p>
-
+          <h3 className="font-bold mb-4 flex items-center gap-2 text-blue-600"><Download size={20} /> データ管理</h3>
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={handleExport}
               disabled={isExporting}
               className="flex items-center justify-center gap-2 bg-blue-50 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-100 transition"
             >
-              <Download size={18} /> エクスポート
+              <Download size={18} /> 書き出し
             </button>
             <label className="flex items-center justify-center gap-2 bg-gray-50 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-100 transition cursor-pointer">
-              <Upload size={18} /> インポート
+              <Upload size={18} /> 読み込み
               <input type="file" className="hidden" onChange={handleImport} accept=".json" />
             </label>
           </div>
         </section>
 
         <section className="bg-red-50 p-6 rounded-2xl border border-red-100">
-          <h3 className="font-bold mb-2 text-red-600 flex items-center gap-2"><AlertTriangle size={20} /> 注意事項</h3>
+          <h3 className="font-bold mb-2 text-red-600 flex items-center gap-2"><Info size={20} /> 注意事項</h3>
           <ul className="text-sm text-red-700 space-y-2 list-disc pl-4">
-            <li>データはブラウザのローカル（IndexedDB）にのみ保存されます。ブラウザのキャッシュをクリアするとデータが消える可能性があります。</li>
-            <li>1人会社・免税事業者向けに設計されているため、消費税の自動計算機能はありません。</li>
+            <li>設定を保存すると決算書類に即座に反映されます。</li>
+            <li>データはブラウザ内にのみ保存されます。</li>
           </ul>
         </section>
       </div>

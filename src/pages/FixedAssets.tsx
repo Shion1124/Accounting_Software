@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Package, Trash2, Zap } from 'lucide-react';
+import { Package, Trash2, Zap, Edit2, X } from 'lucide-react';
 
 export const FixedAssets = () => {
-  const assets = useLiveQuery(() => db.fixedAssets.toArray());
   const [showAdd, setShowAdd] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     acquisitionDate: new Date().toISOString().split('T')[0],
@@ -16,12 +16,54 @@ export const FixedAssets = () => {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    await db.fixedAssets.add({
-      id: crypto.randomUUID(),
-      ...formData,
-      isDisposed: false
-    });
+    if (editingId) {
+      await db.fixedAssets.update(editingId, formData);
+      setEditingId(null);
+    } else {
+      await db.fixedAssets.add({
+        id: crypto.randomUUID(),
+        ...formData,
+        isDisposed: false
+      });
+    }
     setShowAdd(false);
+    setFormData({
+      name: '',
+      acquisitionDate: new Date().toISOString().split('T')[0],
+      acquisitionCost: 0,
+      usefulLife: 4,
+      depreciationMethod: 'straight-line'
+    });
+  };
+
+  const handleEdit = (asset: any) => {
+    setFormData({
+      name: asset.name,
+      acquisitionDate: asset.acquisitionDate,
+      acquisitionCost: asset.acquisitionCost,
+      usefulLife: asset.usefulLife,
+      depreciationMethod: asset.depreciationMethod
+    });
+    setEditingId(asset.id);
+    setShowAdd(true);
+  };
+
+  const handleCancel = () => {
+    setShowAdd(false);
+    setEditingId(null);
+    setFormData({
+      name: '',
+      acquisitionDate: new Date().toISOString().split('T')[0],
+      acquisitionCost: 0,
+      usefulLife: 4,
+      depreciationMethod: 'straight-line'
+    });
+  };
+
+  const handleDelete = async (id: string, name: string) => {
+    if (confirm(`固定資産「${name}」を台帳から削除してもよろしいですか？\n※この操作により「過去の減価償却仕訳」が削除されることはありません。`)) {
+      await db.fixedAssets.delete(id);
+    }
   };
 
   const generateDepreciationEntry = async (asset: any) => {
@@ -49,38 +91,45 @@ export const FixedAssets = () => {
     alert('仕訳を生成しました。');
   };
 
+  const assets = useLiveQuery(() => db.fixedAssets.toArray());
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">固定資産台帳</h2>
         <button
-          onClick={() => setShowAdd(!showAdd)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+          onClick={() => showAdd ? handleCancel() : setShowAdd(true)}
+          className={`${showAdd ? 'bg-gray-500' : 'bg-blue-600'} text-white px-4 py-2 rounded-lg transition`}
         >
-          資産を登録
+          {showAdd ? 'キャンセル' : '資産を登録'}
         </button>
       </div>
 
       {showAdd && (
-        <form onSubmit={handleAdd} className="bg-white p-6 rounded-xl border mb-8 grid grid-cols-2 gap-4">
+        <form onSubmit={handleAdd} className="bg-white p-6 rounded-xl border mb-8 grid grid-cols-2 gap-4 shadow-sm">
+          <div className="col-span-2 flex justify-between items-center mb-2">
+            <h3 className="font-bold text-gray-700">{editingId ? '資産の編集' : '新規資産登録'}</h3>
+          </div>
           <div className="col-span-2">
             <label className="text-xs font-bold text-gray-500 uppercase">資産名</label>
-            <input required className="w-full border p-2 rounded" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+            <input required className="w-full border p-2 rounded bg-white" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
           </div>
           <div>
             <label className="text-xs font-bold text-gray-500 uppercase">取得日</label>
-            <input type="date" className="w-full border p-2 rounded" value={formData.acquisitionDate} onChange={e => setFormData({ ...formData, acquisitionDate: e.target.value })} />
+            <input type="date" className="w-full border p-2 rounded bg-white" value={formData.acquisitionDate} onChange={e => setFormData({ ...formData, acquisitionDate: e.target.value })} />
           </div>
           <div>
             <label className="text-xs font-bold text-gray-500 uppercase">取得価額</label>
-            <input type="number" className="w-full border p-2 rounded" value={formData.acquisitionCost || ''} onChange={e => setFormData({ ...formData, acquisitionCost: Number(e.target.value) })} />
+            <input type="number" className="w-full border p-2 rounded bg-white" value={formData.acquisitionCost || ''} onChange={e => setFormData({ ...formData, acquisitionCost: Number(e.target.value) })} />
           </div>
           <div>
             <label className="text-xs font-bold text-gray-500 uppercase">耐用年数 (年)</label>
-            <input type="number" className="w-full border p-2 rounded" value={formData.usefulLife || ''} onChange={e => setFormData({ ...formData, usefulLife: Number(e.target.value) })} />
+            <input type="number" className="w-full border p-2 rounded bg-white" value={formData.usefulLife || ''} onChange={e => setFormData({ ...formData, usefulLife: Number(e.target.value) })} />
           </div>
-          <div className="flex items-end">
-            <button type="submit" className="w-full bg-slate-800 text-white p-2 rounded-lg font-bold">保存</button>
+          <div className="flex items-end gap-2">
+            <button type="submit" className="flex-1 bg-slate-800 text-white p-2 rounded-lg font-bold hover:bg-slate-700 transition">
+              {editingId ? '更新する' : '保存する'}
+            </button>
           </div>
         </form>
       )}
@@ -104,12 +153,28 @@ export const FixedAssets = () => {
                 <td className="px-6 py-4 text-right font-mono">¥{asset.acquisitionCost.toLocaleString()}</td>
                 <td className="px-6 py-4 text-center text-sm">{asset.usefulLife}年</td>
                 <td className="px-6 py-4 text-center">
-                  <button
-                    onClick={() => generateDepreciationEntry(asset)}
-                    className="bg-amber-100 text-amber-700 px-3 py-1 rounded text-xs font-bold flex items-center gap-1 mx-auto hover:bg-amber-200 transition"
-                  >
-                    <Zap size={14} /> 償却仕訳
-                  </button>
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => generateDepreciationEntry(asset)}
+                      className="bg-amber-100 text-amber-700 px-3 py-1 rounded text-xs font-bold flex items-center gap-1 hover:bg-amber-200 transition"
+                    >
+                      <Zap size={14} /> 償却仕訳
+                    </button>
+                    <button
+                      onClick={() => handleEdit(asset)}
+                      className="text-gray-400 hover:text-blue-600 transition-colors p-1"
+                      title="編集"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(asset.id!, asset.name)}
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                      title="削除"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -21,6 +21,8 @@ export interface JournalLine {
   accountId: string;
   debit: number;
   credit: number;
+  taxType?: '課税' | '非課税' | '対象外';
+  taxRate?: number;
 }
 
 export interface FixedAsset {
@@ -55,6 +57,9 @@ export class AccountingDatabase extends Dexie {
       journalLines: 'id, journalId, accountId',
       fixedAssets: 'id, name, acquisitionDate',
       settings: 'key'
+    });
+    this.version(2).stores({
+      journalLines: 'id, journalId, accountId, taxType'
     });
   }
 }
@@ -91,11 +96,31 @@ export const initialAccounts: Omit<Account, 'id'>[] = [
 ];
 
 export async function seedDatabase() {
-  const count = await db.accounts.count();
-  if (count === 0) {
-    const accountsWithId = initialAccounts.map(a => ({ ...a, id: crypto.randomUUID() }));
-    await db.accounts.bulkAdd(accountsWithId);
-    await db.settings.add({ key: 'fiscalYearStart', value: '2025-01-01' });
-    await db.settings.add({ key: 'companyName', value: 'サンプル株式会社' });
+  const existingAccounts = await db.accounts.toArray();
+  const existingNames = new Set(existingAccounts.map(a => a.name));
+
+  const newAccounts = initialAccounts
+    .filter(a => !existingNames.has(a.name))
+    .map(a => ({ ...a, id: crypto.randomUUID() }));
+
+  if (newAccounts.length > 0) {
+    await db.accounts.bulkAdd(newAccounts);
+  }
+
+  const hasSettings = await db.settings.count();
+  if (hasSettings === 0) {
+    await db.settings.bulkAdd([
+      { key: 'companyName', value: 'サンプル株式会社' },
+      { key: 'representativeName', value: '代表取締役 常田 詩音' },
+      { key: 'address', value: '東京都港区...' },
+      { key: 'fiscalYearStart', value: '2025-01-01' },
+      { key: 'fiscalYearEnd', value: '2025-12-31' },
+      { key: 'fiscalPeriod', value: '2' },
+      { key: 'taxMethod', value: '税込方式' },
+      { key: 'taxRate', value: '10' },
+      { key: 'reducedTaxRate', value: '8' },
+      { key: 'issuedShares', value: '100' },
+      { key: 'otherNotes', value: '特記事項なし' }
+    ]);
   }
 }
