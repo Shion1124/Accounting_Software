@@ -233,9 +233,9 @@ export const FinancialStatements = () => {
                   <tbody className="text-[10px]">
                     <tr><td className="p-1 font-bold">I 流動負債</td><td className="p-1 text-right font-bold text-[11px]">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td></tr>
                     {liabilities.map(r => renderAccountRow(r.name, r.balance, true))}
-                    <tr className="border-t border-slate-400 bg-slate-50">
+                    <tr className="border-t border-b border-slate-900 bg-slate-50">
                       <td className="p-1 font-bold pl-4 text-[10px]">負債合計</td>
-                      <td className="p-1 text-right font-bold text-xs border-b-2 border-slate-900">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td>
+                      <td className="p-1 text-right font-bold text-xs">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td>
                     </tr>
                     <tr className="bg-slate-50 border-b-2 border-slate-900">
                       <td colSpan={2} className="p-1 font-bold text-center text-[10px]">純資産</td>
@@ -244,9 +244,9 @@ export const FinancialStatements = () => {
                     {equity.find(r => r.code === '300') && renderAccountRow("資本金", results.find(r => r.code === '300')?.balance || 0, true)}
                     <tr><td className="p-1 pl-4 text-[10px]">利益剰余金</td><td className="p-1 text-right text-[11px]">{formatJPY((results.find(r => r.code === '310')?.balance || 0) + netIncome)}</td></tr>
                     {renderAccountRow("当期純利益", netIncome, true)}
-                    <tr className="border-t border-slate-400 bg-slate-50">
+                    <tr className="border-t border-b border-slate-900 bg-slate-50">
                       <td className="p-1 font-bold pl-4 text-[10px]">純資産合計</td>
-                      <td className="p-1 text-right font-bold text-xs border-b-2 border-slate-900">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
+                      <td className="p-1 text-right font-bold text-xs">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
                     </tr>
                   </tbody>
                 </table>
