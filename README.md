@@ -9,11 +9,11 @@
 ![ダッシュボード](./docs/images/dashboard.png)
 
 ### 決算報告書パック (Financial Report Package)
-![決算報告書](./docs/images/accounting-software-1.png)
-![決算報告書](./docs/images/accounting-software-2.png)
-![決算報告書](./docs/images/accounting-software-3.png)
-![決算報告書](./docs/images/accounting-software-4.png)
-![決算報告書](./docs/images/accounting-software-5.png)
+![決算報告書](./docs/images/1-1.png)
+![決算報告書](./docs/images/1-2.png)
+![決算報告書](./docs/images/1-3.png)
+![決算報告書](./docs/images/1-4.png)
+![決算報告書](./docs/images/1-5.png)
 
 ## 🌟 プロジェクトの特徴
 
