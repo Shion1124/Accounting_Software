@@ -30,8 +30,8 @@ body {
 
   @page {
     size: A4 portrait;
-    margin: 10mm 15mm;
-    /* Add safe margins to discourage browser from injecting text into content area */
+    margin: 0;
+    /* Hide browser headers/footers (localhost, date, title) */
   }
 
   body {
@@ -40,7 +40,6 @@ body {
     margin: 0 !important;
     padding: 0 !important;
     width: 210mm;
-    /* Strict A4 width */
   }
 
   /* Strict A4 Page Container */
@@ -50,22 +49,20 @@ body {
     page-break-after: always !important;
     break-after: page !important;
     overflow: hidden;
-    /* Prevent content from leaking and changing page size */
     position: relative;
     box-sizing: border-box;
     margin: 0 !important;
     padding: 20mm !important;
-    /* Standard A4 margins handled inside */
+    /* Managed safety area inside HTML container */
     background-color: white !important;
+    -webkit-print-color-adjust: exact;
   }
 
-  /* Last page: no page break after */
   .report-page:last-child {
     page-break-after: avoid !important;
     break-after: avoid !important;
   }
 
-  /* Table and rows inside should not break */
   .report-page table,
   .report-page tr,
   .report-page tbody {
@@ -73,42 +70,13 @@ body {
     break-inside: avoid !important;
   }
 
-  /* Utility for sections that should absolutely stay on one page */
-  .print-section {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+  /* Unify numeric fonts for clinical precision */
+  .font-mono,
+  .tabular-nums {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Page Numbering */
-  .report-page::after {
-    display: block;
-    position: absolute;
-    bottom: 10mm;
-    right: 20mm;
-    font-size: 9pt;
-    color: #333;
-    font-family: serif;
-  }
-
-  .report-page-1::after {
-    content: "1 / 5";
-  }
-
-  .report-page-2::after {
-    content: "2 / 5";
-  }
-
-  .report-page-3::after {
-    content: "3 / 5";
-  }
-
-  .report-page-4::after {
-    content: "4 / 5";
-  }
-
-  .report-page-5::after {
-    content: "5 / 5";
-  }
 }
 
 /* Screen viewing styles to mimic A4 */

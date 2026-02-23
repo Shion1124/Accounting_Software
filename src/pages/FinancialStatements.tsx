@@ -57,26 +57,30 @@ export const FinancialStatements = () => {
     );
   };
 
-  const renderCover = () => {
-    const formatDateJP = (dateStr: string) => {
-      if (!dateStr) return '';
-      const d = new Date(dateStr);
-      const year = d.getFullYear() - 2018; // Reiwa
-      const renderNum = (n: number | string) => <span className="font-mono tabular-nums">{n}</span>;
+  const formatDateJP = (dateStr: string | undefined, includeDay = true) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const year = d.getFullYear() - 2018; // Reiwa
+    const renderNum = (n: number | string) => <span className="font-mono tabular-nums">{n}</span>;
+    if (includeDay) {
       return <>令和{renderNum(year)}年 {renderNum(d.getMonth() + 1)}月 {renderNum(d.getDate())}日</>;
-    };
+    }
+    return <>令和{renderNum(year)}年 {renderNum(d.getMonth() + 1)}月</>;
+  };
+
+  const renderCover = () => {
 
     return (
-      <div className="bg-white flex flex-col items-center border border-gray-100 font-serif text-slate-900 report-page report-page-1">
-        <div className="mt-16 text-center w-full">
+      <div className="bg-white border border-gray-100 font-serif text-slate-900 report-page report-page-1 flex flex-col justify-center items-center">
+        <div className="text-center">
           <h1
-            className="text-4xl font-bold mb-6 border-b-2 border-slate-900 pb-4 inline-block px-12"
+            className="text-4xl font-bold mb-4 border-b-2 border-slate-900 pb-3 inline-block px-12"
             style={{ letterSpacing: '0.5em' }}
           >決算報告書</h1>
-          <p className="text-xl mt-4">（第 <span className="font-mono tabular-nums">{settings.fiscalPeriod || '—'}</span> 期）</p>
+          <p className="text-xl mt-3">（第 <span className="font-mono tabular-nums">{settings.fiscalPeriod || '—'}</span> 期）</p>
         </div>
 
-        <div className="mt-12 text-center w-full space-y-6 flex-grow">
+        <div className="mt-16 text-center space-y-10">
           <div className="inline-block text-left text-lg space-y-2 border-y border-slate-200 py-4 px-10">
             <div className="flex gap-8 items-center">
               <span className="text-sm text-slate-500 w-4">自</span>
@@ -88,11 +92,11 @@ export const FinancialStatements = () => {
             </div>
           </div>
 
-          <div className="pt-16 space-y-6 max-w-2xl mx-auto">
-            <div className="text-center leading-tight">
-              <h2 className="text-3xl font-bold mb-2 tracking-widest whitespace-nowrap">{settings.companyName}</h2>
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-3 tracking-widest whitespace-nowrap">{settings.companyName}</h2>
               <div className="w-16 h-px bg-slate-900 mx-auto mb-4"></div>
-              <p className="text-sm text-slate-700 mb-2">{settings.address}</p>
+              <p className="text-sm text-slate-700 mb-3">{settings.address}</p>
               <p className="text-xl font-semibold">{settings.representativeName}</p>
             </div>
           </div>
@@ -178,7 +182,7 @@ export const FinancialStatements = () => {
     return (
       <div className="bg-white border border-gray-200 font-serif text-sm leading-normal report-page report-page-2">
         <h3 className="text-2xl font-bold text-center mb-2 underline underline-offset-4 tracking-[0.5rem]">貸 借 対 照 表</h3>
-        <p className="text-center mb-4 text-slate-600 text-xs">{new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日 現在</p>
+        <p className="text-center mb-4 text-slate-600 text-xs">{formatDateJP(settings.fiscalYearEnd || settings.fiscalYearStart)} 現在</p>
 
         <div className="flex justify-between mb-2 text-slate-700 text-xs">
           <span>{settings.companyName}</span>
@@ -271,8 +275,8 @@ export const FinancialStatements = () => {
       <div className="print-section bg-white border border-gray-200 font-serif text-sm leading-relaxed text-slate-900 report-page report-page-3">
         <h3 className="text-2xl font-bold text-center mb-4 underline underline-offset-4 tracking-[0.6rem] whitespace-nowrap">損 益 計 算 書</h3>
         <p className="text-center mb-6 text-slate-600 text-xs">
-          自 {new Date(settings.fiscalYearStart || Date.now()).getFullYear()}年 {new Date(settings.fiscalYearStart || Date.now()).getMonth() + 1}月 {new Date(settings.fiscalYearStart || Date.now()).getDate()}日<br />
-          至 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日
+          自 {formatDateJP(settings.fiscalYearStart)}<br />
+          至 {formatDateJP(settings.fiscalYearEnd || settings.fiscalYearStart)}
         </p>
 
         <div className="flex justify-between mb-4 text-slate-700 text-xs">
