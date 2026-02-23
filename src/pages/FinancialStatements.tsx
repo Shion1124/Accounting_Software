@@ -67,30 +67,33 @@ export const FinancialStatements = () => {
     };
 
     return (
-      <div className="bg-white p-20 flex flex-col items-center justify-between min-h-[1050px] border border-gray-100 shadow-sm print:shadow-none print:border-none font-serif">
-        <div className="mt-60 text-center w-full">
-          <h1 className="text-5xl tracking-[1.5rem] mb-16 border-b-2 border-slate-900 pb-8 inline-block px-12">決 算 報 告 書</h1>
-          <p className="text-2xl mt-8">（第 <span className="font-mono tabular-nums">{settings.fiscalPeriod || '—'}</span> 期）</p>
+      <div className="bg-white flex flex-col items-center border border-gray-100 font-serif text-slate-900 report-page report-page-1">
+        <div className="mt-16 text-center w-full">
+          <h1
+            className="text-4xl font-bold mb-6 border-b-2 border-slate-900 pb-4 inline-block px-12"
+            style={{ letterSpacing: '0.5em' }}
+          >決算報告書</h1>
+          <p className="text-xl mt-4">（第 <span className="font-mono tabular-nums">{settings.fiscalPeriod || '—'}</span> 期）</p>
         </div>
 
-        <div className="text-center w-full mb-20 space-y-8">
-          <div className="flex flex-col gap-4 text-xl">
-            <div className="flex justify-center gap-8">
-              <span>自</span>
+        <div className="mt-12 text-center w-full space-y-6 flex-grow">
+          <div className="inline-block text-left text-lg space-y-2 border-y border-slate-200 py-4 px-10">
+            <div className="flex gap-8 items-center">
+              <span className="text-sm text-slate-500 w-4">自</span>
               <span>{formatDateJP(settings.fiscalYearStart)}</span>
             </div>
-            <div className="flex justify-center gap-8 border-b inline-block mx-auto pb-2">
-              <span>至</span>
+            <div className="flex gap-8 items-center">
+              <span className="text-sm text-slate-500 w-4">至</span>
               <span>{formatDateJP(settings.fiscalYearEnd || settings.fiscalYearStart)}</span>
             </div>
           </div>
 
-          <div className="pt-32 space-y-8 max-w-lg mx-auto">
-            <div className="text-center">
-              <h2 className="text-4xl mb-4">{settings.companyName}</h2>
-              <div className="w-24 h-px bg-slate-400 mx-auto mb-8"></div>
-              <p className="text-lg text-slate-600 mb-2">{settings.address}</p>
-              <p className="text-2xl">{settings.representativeName}</p>
+          <div className="pt-16 space-y-6 max-w-2xl mx-auto">
+            <div className="text-center leading-tight">
+              <h2 className="text-3xl font-bold mb-2 tracking-widest whitespace-nowrap">{settings.companyName}</h2>
+              <div className="w-16 h-px bg-slate-900 mx-auto mb-4"></div>
+              <p className="text-sm text-slate-700 mb-2">{settings.address}</p>
+              <p className="text-xl font-semibold">{settings.representativeName}</p>
             </div>
           </div>
         </div>
@@ -109,43 +112,43 @@ export const FinancialStatements = () => {
     const reMovement = (curRE - begRE) + netIncome;
 
     return (
-      <div className="bg-white p-8 border border-gray-200 shadow-sm max-w-4xl mx-auto print:shadow-none print:border-none overflow-x-auto">
-        <h3 className="text-xl font-bold text-center mb-8">株主資本等変動計算書</h3>
-        <p className="text-xs text-right mb-4">（単位：円）</p>
-        <table className="w-full border-collapse border border-gray-800 text-[10px]">
+      <div className="bg-white border border-gray-200 font-serif text-[11px] leading-normal report-page report-page-4">
+        <h3 className="text-xl font-bold text-center mb-6 underline underline-offset-4 tracking-[0.3rem]">株主資本等変動計算書</h3>
+        <p className="text-xs text-right mb-2 text-slate-600">（単位：円）</p>
+        <table className="w-full border-collapse border border-gray-700 text-xs">
           <thead>
-            <tr>
-              <th rowSpan={2} className="border border-gray-800 p-1 bg-gray-50">項目</th>
-              <th colSpan={3} className="border border-gray-800 p-1 bg-gray-50 text-center">株主資本</th>
-              <th rowSpan={2} className="border border-gray-800 p-1 bg-gray-50">純資産合計</th>
+            <tr className="bg-gray-100">
+              <th rowSpan={2} className="border border-gray-700 p-1">項目</th>
+              <th colSpan={3} className="border border-gray-700 p-1 text-center">株主資本</th>
+              <th rowSpan={2} className="border border-gray-700 p-1">純資産合計</th>
             </tr>
-            <tr>
-              <th className="border border-gray-800 p-1 bg-gray-50">資本金</th>
-              <th className="border border-gray-800 p-1 bg-gray-50">利益剰余金</th>
-              <th className="border border-gray-800 p-1 bg-gray-50 text-center">合計</th>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-700 p-1">資本金</th>
+              <th className="border border-gray-700 p-1">利益剰余金</th>
+              <th className="border border-gray-700 p-1 text-center">合計</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="border border-gray-800 p-2">当期首残高</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{begCap.toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{begRE.toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(begCap + begRE).toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(begCap + begRE).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2">当期首残高</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{begCap.toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{begRE.toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(begCap + begRE).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(begCap + begRE).toLocaleString()}</td>
             </tr>
             <tr>
-              <td className="border border-gray-800 p-2">当期変動額</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{capMovement === 0 ? '-' : capMovement.toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{reMovement.toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(capMovement + reMovement).toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(capMovement + reMovement).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2">当期変動額</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{capMovement === 0 ? '-' : capMovement.toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{reMovement.toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(capMovement + reMovement).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(capMovement + reMovement).toLocaleString()}</td>
             </tr>
-            <tr className="bg-gray-100 font-bold">
-              <td className="border border-gray-800 p-2">当期末残高</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{curCap.toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(curRE + netIncome).toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(curCap + curRE + netIncome).toLocaleString()}</td>
-              <td className="border border-gray-800 p-2 text-right font-mono">{(curCap + curRE + netIncome).toLocaleString()}</td>
+            <tr className="bg-gray-50 font-bold">
+              <td className="border border-gray-700 p-2">当期末残高</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{curCap.toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(curRE + netIncome).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(curCap + curRE + netIncome).toLocaleString()}</td>
+              <td className="border border-gray-700 p-2 text-right font-mono text-[10px]">{(curCap + curRE + netIncome).toLocaleString()}</td>
             </tr>
           </tbody>
         </table>
@@ -166,18 +169,18 @@ export const FinancialStatements = () => {
     const deferredAssets = assets.filter(r => r.code >= '190');
 
     const renderAccountRow = (name: string, balance: number, indent = false) => (
-      <tr key={name}>
-        <td className={`border-r border-slate-400 p-1 ${indent ? 'pl-8' : ''}`}>{name}</td>
-        <td className="p-1 text-right align-middle">{formatJPY(balance)}</td>
+      <tr key={name} className="text-[10px]">
+        <td className={`border-r border-slate-400 p-1 ${indent ? 'pl-4' : ''}`}>{name}</td>
+        <td className="p-1 text-right align-middle text-[11px]">{formatJPY(balance)}</td>
       </tr>
     );
 
     return (
-      <div className="bg-white p-12 border border-gray-200 shadow-sm max-w-5xl mx-auto print:shadow-none print:border-none font-serif text-[11px]">
-        <h3 className="text-2xl font-bold text-center mb-1 underline underline-offset-4 tracking-[0.5rem]">貸 借 対 照 表</h3>
-        <p className="text-center mb-8">{new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日 現在</p>
+      <div className="bg-white border border-gray-200 font-serif text-sm leading-normal report-page report-page-2">
+        <h3 className="text-2xl font-bold text-center mb-2 underline underline-offset-4 tracking-[0.5rem]">貸 借 対 照 表</h3>
+        <p className="text-center mb-4 text-slate-600 text-xs">{new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日 現在</p>
 
-        <div className="flex justify-between mb-1">
+        <div className="flex justify-between mb-2 text-slate-700 text-xs">
           <span>{settings.companyName}</span>
           <span>（単位：円）</span>
         </div>
@@ -185,36 +188,36 @@ export const FinancialStatements = () => {
         <table className="w-full border-2 border-slate-900 border-collapse">
           <thead>
             <tr className="border-b-2 border-slate-900">
-              <th colSpan={2} className="border-r-2 border-slate-900 p-2 w-1/2">資 産 の 部</th>
-              <th colSpan={2} className="p-2 w-1/2">負 債 の 部</th>
+              <th colSpan={2} className="border-r-2 border-slate-900 p-1 w-1/2 text-sm">資 産 の 部</th>
+              <th colSpan={2} className="p-1 w-1/2 text-sm">負 債 の 部</th>
             </tr>
-            <tr className="border-b border-slate-400 bg-slate-50 uppercase tracking-wider text-[10px]">
-              <th className="border-r border-slate-400 p-1">科 目</th>
-              <th className="border-r-2 border-slate-900 p-1">金 額</th>
-              <th className="border-r border-slate-400 p-1">科 目</th>
-              <th className="p-1">金 額</th>
+            <tr className="border-b border-slate-400 bg-slate-50 text-[10px] font-bold uppercase tracking-wider">
+              <th className="border-r border-slate-400 p-1">科目</th>
+              <th className="border-r-2 border-slate-900 p-1">金額</th>
+              <th className="border-r border-slate-400 p-1">科目</th>
+              <th className="p-1">金額</th>
             </tr>
           </thead>
           <tbody className="align-top">
             <tr>
               <td colSpan={2} className="border-r-2 border-slate-900 p-0">
                 <table className="w-full">
-                  <tbody>
-                    <tr><td className="p-1 font-bold">I 流動資産</td><td className="p-1 text-right font-bold">{formatJPY(currentAssetsList.reduce((s, r) => s + r.balance, 0))}</td></tr>
+                  <tbody className="text-[10px]">
+                    <tr><td className="p-1 font-bold">I 流動資産</td><td className="p-1 text-right font-bold text-[11px]">{formatJPY(currentAssetsList.reduce((s, r) => s + r.balance, 0))}</td></tr>
                     {cashAndDeposits.length > 0 && renderAccountRow("現金及び預金", cashAndDeposits.reduce((s, r) => s + r.balance, 0), true)}
                     {otherCurrentAssets.map(r => renderAccountRow(r.name, r.balance, true))}
 
-                    <tr><td className="p-1 font-bold pt-2">II 固定資産</td><td className="p-1 text-right font-bold pt-2">{formatJPY(fixedAssets.reduce((s, r) => s + r.balance, 0))}</td></tr>
+                    <tr><td className="p-1 font-bold pt-2">II 固定資産</td><td className="p-1 text-right font-bold pt-2 text-[11px]">{formatJPY(fixedAssets.reduce((s, r) => s + r.balance, 0))}</td></tr>
                     {fixedAssets.length > 0 && (
                       <>
-                        <tr><td className="p-1 pl-4">(有形固定資産)</td><td className="p-1"></td></tr>
+                        <tr><td className="p-1 pl-4 text-[10px]">(有形固定資産)</td><td className="p-1"></td></tr>
                         {fixedAssets.map(r => renderAccountRow(r.name, r.balance, true))}
                       </>
                     )}
 
                     {deferredAssets.length > 0 && (
                       <>
-                        <tr><td className="p-1 font-bold pt-2">III 繰延資産</td><td className="p-1 text-right font-bold pt-2">{formatJPY(deferredAssets.reduce((s, r) => s + r.balance, 0))}</td></tr>
+                        <tr><td className="p-1 font-bold pt-2">III 繰延資産</td><td className="p-1 text-right font-bold pt-2 text-[11px]">{formatJPY(deferredAssets.reduce((s, r) => s + r.balance, 0))}</td></tr>
                         {deferredAssets.map(r => renderAccountRow(r.name, r.balance, true))}
                       </>
                     )}
@@ -223,35 +226,33 @@ export const FinancialStatements = () => {
               </td>
               <td colSpan={2} className="p-0">
                 <table className="w-full">
-                  <tbody>
-                    <tr><td className="p-1 font-bold">I 流動負債</td><td className="p-1 text-right font-bold">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td></tr>
+                  <tbody className="text-[10px]">
+                    <tr><td className="p-1 font-bold">I 流動負債</td><td className="p-1 text-right font-bold text-[11px]">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td></tr>
                     {liabilities.map(r => renderAccountRow(r.name, r.balance, true))}
                     <tr className="border-t border-slate-400 bg-slate-50">
-                      <td className="p-1 font-bold pl-4">負 債 の 部 合 計</td>
-                      <td className="p-1 text-right font-bold text-sm border-double border-b-4 border-slate-900">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td>
+                      <td className="p-1 font-bold pl-4 text-[10px]">負債合計</td>
+                      <td className="p-1 text-right font-bold text-xs border-b-2 border-slate-900">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0))}</td>
                     </tr>
-                    <tr className="bg-slate-50 border-b border-slate-900">
-                      <td colSpan={2} className="p-1 font-bold text-center">純 資 産 の 部</td>
+                    <tr className="bg-slate-50 border-b-2 border-slate-900">
+                      <td colSpan={2} className="p-1 font-bold text-center text-[10px]">純資産</td>
                     </tr>
-                    <tr><td className="p-1 font-bold pt-2">I 株主資本</td><td className="p-1 text-right font-bold pt-2">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td></tr>
+                    <tr><td className="p-1 font-bold pt-2 text-[10px]">I 株主資本</td><td className="p-1 text-right font-bold pt-2 text-[11px]">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td></tr>
                     {equity.find(r => r.code === '300') && renderAccountRow("資本金", results.find(r => r.code === '300')?.balance || 0, true)}
-                    <tr><td className="p-1 pl-4">利益剰余金</td><td className="p-1 text-right">{formatJPY((results.find(r => r.code === '310')?.balance || 0) + netIncome)}</td></tr>
-                    <tr><td className="p-1 pl-8">その他利益剰余金</td><td className="p-1 text-right">{formatJPY((results.find(r => r.code === '310')?.balance || 0) + netIncome)}</td></tr>
-                    <tr><td className="p-1 pl-12 text-slate-600 italic">繰越利益剰余金</td><td className="p-1 text-right">{formatJPY((results.find(r => r.code === '310')?.balance || 0) + netIncome)}</td></tr>
-                    {renderAccountRow("（うち当期純利益）", netIncome, true)}
+                    <tr><td className="p-1 pl-4 text-[10px]">利益剰余金</td><td className="p-1 text-right text-[11px]">{formatJPY((results.find(r => r.code === '310')?.balance || 0) + netIncome)}</td></tr>
+                    {renderAccountRow("当期純利益", netIncome, true)}
                     <tr className="border-t border-slate-400 bg-slate-50">
-                      <td className="p-1 font-bold pl-4">純 資 産 の 部 合 計</td>
-                      <td className="p-1 text-right font-bold text-sm border-double border-b-4 border-slate-900">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
+                      <td className="p-1 font-bold pl-4 text-[10px]">純資産合計</td>
+                      <td className="p-1 text-right font-bold text-xs border-b-2 border-slate-900">{formatJPY(equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
                     </tr>
                   </tbody>
                 </table>
               </td>
             </tr>
-            <tr className="border-t-2 border-slate-900 font-bold bg-slate-50">
-              <td className="p-2 border-r border-slate-400">資 産 の 部 合 計</td>
-              <td className="p-2 text-right border-r-2 border-slate-900 tracking-wider">{formatJPY(assets.reduce((s, r) => s + r.balance, 0))}</td>
+            <tr className="border-t-2 border-slate-900 font-bold bg-slate-100 text-[11px]">
+              <td className="p-2 border-r-2 border-slate-900">資産合計</td>
+              <td className="p-2 text-right border-r-2 border-slate-900">{formatJPY(assets.reduce((s, r) => s + r.balance, 0))}</td>
               <td className="p-2 border-r border-slate-400">負債及び純資産合計</td>
-              <td className="p-2 text-right tracking-wider">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0) + equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
+              <td className="p-2 text-right">{formatJPY(liabilities.reduce((s, r) => s + r.balance, 0) + equity.reduce((s, r) => s + r.balance, 0) + netIncome)}</td>
             </tr>
           </tbody>
         </table>
@@ -267,56 +268,61 @@ export const FinancialStatements = () => {
     const sgaTotal = expenses.filter(e => e.code >= '510').reduce((s, r) => s + r.balance, 0);
 
     return (
-      <div className="bg-white p-20 border border-gray-200 shadow-sm max-w-4xl mx-auto print:shadow-none print:border-none font-serif min-h-[1050px]">
-        <h3 className="text-2xl font-bold text-center mb-1 underline underline-offset-4 tracking-[0.5rem]">損 益 計 算 書</h3>
-        <p className="text-center mb-8 text-sm">自 {new Date(settings.fiscalYearStart || Date.now()).getFullYear()}年 {new Date(settings.fiscalYearStart || Date.now()).getMonth() + 1}月 {new Date(settings.fiscalYearStart || Date.now()).getDate()}日<br />至 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日</p>
+      <div className="print-section bg-white border border-gray-200 font-serif text-sm leading-relaxed text-slate-900 report-page report-page-3">
+        <h3 className="text-2xl font-bold text-center mb-4 underline underline-offset-4 tracking-[0.6rem] whitespace-nowrap">損 益 計 算 書</h3>
+        <p className="text-center mb-6 text-slate-600 text-xs">
+          自 {new Date(settings.fiscalYearStart || Date.now()).getFullYear()}年 {new Date(settings.fiscalYearStart || Date.now()).getMonth() + 1}月 {new Date(settings.fiscalYearStart || Date.now()).getDate()}日<br />
+          至 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getFullYear()}年 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getMonth() + 1}月 {new Date(settings.fiscalYearEnd || settings.fiscalYearStart).getDate()}日
+        </p>
 
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between mb-4 text-slate-700 text-xs">
           <span>{settings.companyName}</span>
           <span>（単位：円）</span>
         </div>
 
-        <div className="border-t-2 border-slate-900 py-8 space-y-6">
-          <div className="flex justify-between font-bold text-lg">
+        <div className="border-t-2 border-slate-900 py-4 space-y-4">
+          <div className="flex justify-between font-bold text-base">
             <span>I 売上高</span>
-            <span className="border-b border-slate-900 w-64 text-right flex justify-end">{formatJPY(revenueTotal)}</span>
+            <span className="border-b border-slate-900 w-48 text-right">{formatJPY(revenueTotal)}</span>
           </div>
-          <div className="flex justify-between font-bold text-lg">
+          <div className="flex justify-between font-bold text-base">
             <span>II 売上原価</span>
-            <span className="border-b border-slate-900 w-64 text-right flex justify-end">{formatJPY(expenseTotal)}</span>
+            <span className="border-b border-slate-900 w-48 text-right">{formatJPY(expenseTotal)}</span>
           </div>
-          <div className="flex justify-between font-bold pl-12 text-lg">
+          <div className="flex justify-between font-bold pl-10 text-base">
             <span>売上総利益</span>
-            <span className="border-b border-slate-900 w-64 text-right flex justify-end">{formatJPY(revenueTotal - expenseTotal)}</span>
+            <span className="border-b border-slate-900 w-48 text-right">{formatJPY(revenueTotal - expenseTotal)}</span>
           </div>
 
-          <div className="flex justify-between font-bold mt-12 text-lg">
+          <div className="flex justify-between font-bold mt-4 text-base">
             <span>III 販売費及び一般管理費</span>
-            <span className="border-b border-slate-900 w-64 text-right flex justify-end">{formatJPY(sgaTotal)}</span>
+            <span className="border-b border-slate-900 w-48 text-right">{formatJPY(sgaTotal)}</span>
           </div>
-          {expenses.filter(e => e.code >= '510').map(e => (
-            <div key={e.id} className="flex justify-between pl-12 text-base text-slate-800">
-              <span>{e.name}</span>
-              <span className="w-64 text-right flex justify-end">{formatJPY(e.balance)}</span>
-            </div>
-          ))}
+          <div className="space-y-1">
+            {expenses.filter(e => e.code >= '510').map(e => (
+              <div key={e.id} className="flex justify-between pl-10 text-xs text-slate-800">
+                <span>{e.name}</span>
+                <span className="w-48 text-right">{formatJPY(e.balance)}</span>
+              </div>
+            ))}
+          </div>
 
-          <div className="pt-8 space-y-4">
-            <div className="flex justify-between font-bold mt-8 pt-4 border-t-2 border-slate-900 text-lg">
+          <div className="pt-4 space-y-2">
+            <div className="flex justify-between font-bold mt-2 pt-2 border-t-2 border-slate-900 text-base">
               <span>営業利益</span>
-              <span className="border-b-4 border-double border-slate-900 w-64 text-right flex justify-end">{formatJPY(revenueTotal - expenseTotal - sgaTotal)}</span>
+              <span className="border-b-4 border-double border-slate-900 w-48 text-right">{formatJPY(revenueTotal - expenseTotal - sgaTotal)}</span>
             </div>
-            <div className="flex justify-between font-bold text-lg">
+            <div className="flex justify-between font-bold text-base">
               <span>経常利益</span>
-              <span className="border-b-4 border-double border-slate-900 w-64 text-right flex justify-end">{formatJPY(revenueTotal - expenseTotal - sgaTotal)}</span>
+              <span className="border-b-4 border-double border-slate-900 w-48 text-right">{formatJPY(revenueTotal - expenseTotal - sgaTotal)}</span>
             </div>
-            <div className="flex justify-between font-bold text-lg">
+            <div className="flex justify-between font-bold text-base">
               <span>税引前当期純利益</span>
-              <span className="border-b-4 border-double border-slate-900 w-64 text-right flex justify-end">{formatJPY(netIncome)}</span>
+              <span className="border-b-4 border-double border-slate-900 w-48 text-right">{formatJPY(netIncome)}</span>
             </div>
-            <div className="flex justify-between font-bold text-xl bg-slate-50 p-4 border-t-2 border-b-4 border-double border-slate-900 items-baseline">
-              <span>当 期 純 利 益</span>
-              <span>{formatJPY(netIncome)}</span>
+            <div className="flex justify-between font-bold text-lg bg-slate-50 p-2 border-t border-b-4 border-double border-slate-900 items-baseline">
+              <span className="tracking-widest">当 期 純 利 益</span>
+              <span className="text-xl">{formatJPY(netIncome)}</span>
             </div>
           </div>
         </div>
@@ -325,26 +331,26 @@ export const FinancialStatements = () => {
   };
 
   const renderNotes = () => (
-    <div className="bg-white p-20 border border-gray-200 shadow-sm max-w-4xl mx-auto print:shadow-none print:border-none min-h-[1050px] font-serif">
-      <h3 className="text-2xl font-bold text-center mb-12 underline underline-offset-8 tracking-[1rem]">注 記 表</h3>
-      <div className="space-y-12">
+    <div className="bg-white border border-gray-200 font-serif text-sm leading-relaxed report-page report-page-5">
+      <h3 className="text-2xl font-bold text-center mb-8 underline underline-offset-4 tracking-[0.5rem]">注記表</h3>
+      <div className="space-y-6">
         <section>
-          <h4 className="font-bold border-b border-gray-800 mb-4">1. 重要な会計方針に関する注記</h4>
-          <div className="pl-4 space-y-4 text-sm leading-relaxed">
+          <h4 className="font-bold border-b-2 border-gray-700 mb-2">1. 重要な会計方針に関する注記</h4>
+          <div className="pl-4 space-y-2 text-sm">
             <p>(1) 固定資産の減価償却の方法<br />有形固定資産については定額法によっております。</p>
             <p>(2) 消費税等の会計処理<br />消費税及び地方消費税の会計処理は、{settings.taxMethod || '税込方式'}によっております。</p>
           </div>
         </section>
 
         <section>
-          <h4 className="font-bold border-b border-gray-800 mb-4">2. 株主資本等変動計算書に関する注記</h4>
+          <h4 className="font-bold border-b-2 border-gray-700 mb-2">2. 株主資本等変動計算書に関する注記</h4>
           <div className="pl-4 text-sm">
             <p>当期末における発行済株式の総数 {settings.issuedShares || '普通株式 100株'}</p>
           </div>
         </section>
 
         <section>
-          <h4 className="font-bold border-b border-gray-800 mb-4">3. その他の注記</h4>
+          <h4 className="font-bold border-b-2 border-gray-700 mb-2">3. その他の注記</h4>
           <div className="pl-4 text-sm whitespace-pre-wrap">
             <p>{settings.otherNotes || '特記事項なし。'}</p>
           </div>
@@ -527,11 +533,11 @@ export const FinancialStatements = () => {
         {type === 'BS' && renderBS()}
         {type === 'REPORT' && (
           <div className="space-y-8 print:space-y-0">
-            <div className="print:break-after-page">{renderCover()}</div>
-            <div className="print:break-after-page py-8">{renderOfficialBS()}</div>
-            <div className="print:break-after-page py-8">{renderOfficialPL()}</div>
-            <div className="print:break-after-page py-8">{renderEquity()}</div>
-            <div className="py-8">{renderNotes()}</div>
+            <div>{renderCover()}</div>
+            <div>{renderOfficialBS()}</div>
+            <div>{renderOfficialPL()}</div>
+            <div>{renderEquity()}</div>
+            <div>{renderNotes()}</div>
           </div>
         )}
       </div>

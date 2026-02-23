@@ -28,8 +28,99 @@ body {
     display: none !important;
   }
 
+  @page {
+    size: A4 portrait;
+    margin: 10mm 15mm;
+    /* Add safe margins to discourage browser from injecting text into content area */
+  }
+
   body {
     background-color: white !important;
     color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm;
+    /* Strict A4 width */
+  }
+
+  /* Strict A4 Page Container */
+  .report-page {
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always !important;
+    break-after: page !important;
+    overflow: hidden;
+    /* Prevent content from leaking and changing page size */
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 20mm !important;
+    /* Standard A4 margins handled inside */
+    background-color: white !important;
+  }
+
+  /* Last page: no page break after */
+  .report-page:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* Table and rows inside should not break */
+  .report-page table,
+  .report-page tr,
+  .report-page tbody {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Utility for sections that should absolutely stay on one page */
+  .print-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Page Numbering */
+  .report-page::after {
+    display: block;
+    position: absolute;
+    bottom: 10mm;
+    right: 20mm;
+    font-size: 9pt;
+    color: #333;
+    font-family: serif;
+  }
+
+  .report-page-1::after {
+    content: "1 / 5";
+  }
+
+  .report-page-2::after {
+    content: "2 / 5";
+  }
+
+  .report-page-3::after {
+    content: "3 / 5";
+  }
+
+  .report-page-4::after {
+    content: "4 / 5";
+  }
+
+  .report-page-5::after {
+    content: "5 / 5";
+  }
+}
+
+/* Screen viewing styles to mimic A4 */
+@media screen {
+  .report-page {
+    margin: 20px auto !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 210mm;
+    height: 297mm;
+    background-color: white;
+    padding: 20mm !important;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
 }

@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { TrendingUp, TrendingDown, Wallet, CreditCard, BarChart3 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
 export const Dashboard = () => {
   const stats = useLiveQuery(async () => {

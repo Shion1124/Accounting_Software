@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Trash2, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react';
+import { Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export const MasterAccounts = () => {
   const accounts = useLiveQuery(() => db.accounts.orderBy('code').toArray());

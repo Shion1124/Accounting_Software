@@ -45,8 +45,8 @@ export const JournalEntry = () => {
     }
   };
 
-  const updateRow = (id: string, field: keyof Row, value: string | number) => {
-    setRows(rows.map(r => r.id === id ? { ...r, [field]: value } : r));
+  const updateRow = (id: string, updates: Partial<Row>) => {
+    setRows(prevRows => prevRows.map(r => r.id === id ? { ...r, ...updates } : r));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,7 +131,7 @@ export const JournalEntry = () => {
                     required
                     className="w-full border border-gray-200 rounded p-2 text-sm bg-white cursor-pointer"
                     value={row.accountId}
-                    onChange={e => updateRow(row.id, 'accountId', e.target.value)}
+                    onChange={e => updateRow(row.id, { accountId: e.target.value })}
                   >
                     <option value="">選択してください</option>
                     {accounts?.map(acct => (
@@ -146,9 +146,10 @@ export const JournalEntry = () => {
                       value={row.taxType}
                       onChange={e => {
                         const newType = e.target.value as any;
-                        updateRow(row.id, 'taxType', newType);
-                        if (newType === '課税') updateRow(row.id, 'taxRate', taxSettings?.standard || 10);
-                        else updateRow(row.id, 'taxRate', 0);
+                        const updates: Partial<Row> = { taxType: newType };
+                        if (newType === '課税') updates.taxRate = taxSettings?.standard || 10;
+                        else updates.taxRate = 0;
+                        updateRow(row.id, updates);
                       }}
                     >
                       <option value="課税">課税</option>
@@ -159,7 +160,7 @@ export const JournalEntry = () => {
                       <select
                         className="w-full border border-gray-200 rounded p-1 text-[10px] bg-blue-50 text-blue-700 font-bold"
                         value={row.taxRate}
-                        onChange={e => updateRow(row.id, 'taxRate', Number(e.target.value))}
+                        onChange={e => updateRow(row.id, { taxRate: Number(e.target.value) })}
                       >
                         <option value={taxSettings?.standard || 10}>{taxSettings?.standard || 10}% 標準</option>
                         <option value={taxSettings?.reduced || 8}>{taxSettings?.reduced || 8}% 軽減</option>
@@ -172,7 +173,7 @@ export const JournalEntry = () => {
                     type="number"
                     className="w-full border border-gray-200 rounded p-2 text-sm text-right font-mono bg-white"
                     value={row.debit || ''}
-                    onChange={e => updateRow(row.id, 'debit', Number(e.target.value))}
+                    onChange={e => updateRow(row.id, { debit: Number(e.target.value) })}
                   />
                   {row.taxType === '課税' && row.debit > 0 && (
                     <div className="absolute -bottom-1 right-2 text-[10px] text-gray-400">
@@ -185,7 +186,7 @@ export const JournalEntry = () => {
                     type="number"
                     className="w-full border border-gray-200 rounded p-2 text-sm text-right font-mono bg-white"
                     value={row.credit || ''}
-                    onChange={e => updateRow(row.id, 'credit', Number(e.target.value))}
+                    onChange={e => updateRow(row.id, { credit: Number(e.target.value) })}
                   />
                   {row.taxType === '課税' && row.credit > 0 && (
                     <div className="absolute -bottom-1 right-2 text-[10px] text-gray-400">

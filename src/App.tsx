@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { db, seedDatabase } from './db';
+import { useEffect, useState } from 'react';
+import { seedDatabase } from './db';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { JournalEntry } from './pages/JournalEntry';
